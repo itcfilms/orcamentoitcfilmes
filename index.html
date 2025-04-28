@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Monte seu Vídeo!</title>
+<style>
+  body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #2c3e50, #3498db); padding: 20px; }
+  h2 { color: white; text-align: center; font-size: 2.5em; }
+  .logo { 
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+  }
+  .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .card:hover { transform: translateY(-5px); background: #e0f7fa; }
+  .card.selected { background: #a7ffeb; }
+  .total {
+    margin-top: 30px;
+    font-size: 2em;
+    text-align: center;
+    color: #2a9d8f;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+    resize: none;
+  }
+  .button-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto;
+    padding: 15px 30px;
+    background-color: #25D366;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  .button-whatsapp img {
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Texto ITC FILMS no topo -->
+<div class="logo">ITC FILMS</div>
+
+<h2>Monte seu Vídeo!</h2>
+
+<div class="container" id="services">
+  <div class="card" data-value="40" data-name="Retirada de erros">Retirada de erros<br><small>R$ 40</small></div>
+  <div class="card" data-value="30" data-name="Legendas">Legendas<br><small>R$ 30</small></div>
+  <div class="card" data-value="20" data-name="Trilha Sonora">Trilha Sonora<br><small>R$ 20</small></div>
+  <div class="card" data-value="40" data-name="Motion Textos Animados">Motion Textos Animados<br><small>R$ 40</small></div>
+  <div class="card" data-value="30" data-name="Motion Elementos Gráficos">Motion Elementos Gráficos<br><small>R$ 30</small></div>
+  <div class="card" data-value="20" data-name="Sound Effects (SFX)">Sound Effects (SFX)<br><small>R$ 20</small></div>
+  <div class="card" data-value="20" data-name="Banco de Imagem">Banco de Imagem<br><small>R$ 20</small></div>
+</div>
+
+<div class="total">Total: R$ <span id="total">0</span></div>
+
+<!-- Caixa para link de referência -->
+<textarea id="reference" placeholder="Cole aqui o(s) link(s) de referência para seu vídeo..."></textarea>
+
+<!-- Botão de WhatsApp com ícone -->
+<a id="whatsappLink" class="button-whatsapp" href="#" target="_blank">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Logo-WhatsApp.png" alt="WhatsApp Icon"> 
+  Enviar pedido pelo WhatsApp
+</a>
+
+<script>
+const cards = document.querySelectorAll('.card');
+const totalSpan = document.getElementById('total');
+const whatsappLink = document.getElementById('whatsappLink');
+const referenceInput = document.getElementById('reference');
+let total = 0;
+
+function updateWhatsAppLink() {
+  const selectedServices = [];
+  cards.forEach(card => {
+    if (card.classList.contains('selected')) {
+      selectedServices.push(card.getAttribute('data-name'));
+    }
+  });
+  const referenceLinks = referenceInput.value.trim();
+  
+  let message = "Olá! Gostaria de solicitar a edição de um vídeo com os seguintes serviços:\n\n";
+  selectedServices.forEach(service => {
+    message += "✅ " + service + "\n";
+  });
+  message += "\n💰 Total estimado: R$ " + total + "\n";
+
+  if (referenceLinks) {
+    message += "\n📎 Links de referência:\n" + referenceLinks + "\n";
+  }
+
+  const phoneNumber = "5554991745169"; // Seu número já atualizado
+  const encodedMessage = encodeURIComponent(message);
+  whatsappLink.href = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+}
+
+cards.forEach(card => {
+  card.addEventListener('click', () => {
+    card.classList.toggle('selected');
+    const value = parseInt(card.getAttribute('data-value'));
+    if (card.classList.contains('selected')) {
+      total += value;
+    } else {
+      total -= value;
+    }
+    totalSpan.textContent = total;
+    updateWhatsAppLink();
+  });
+});
+
+referenceInput.addEventListener('input', updateWhatsAppLink);
+</script>
+
+</body>
+</html>
